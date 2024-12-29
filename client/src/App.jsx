@@ -21,13 +21,13 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        <Route path="/" element={<ShoppingHome />} />
+        {/* <Route path="/" element={<ShoppingHome />} /> */}
 
-        {/* Auth Routes - Optional, remove if not needed */}
+        {/* Auth Routes - Optional, remove if not needed
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
-        </Route>
+        </Route> */}
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -37,7 +37,7 @@ function App() {
           <Route path="features" element={<AdminFeatures />} />
         </Route>
 
-        {/* Shopping Routes */}
+        {/* main Routes */}
         <Route path="/shop" element={<ShoppingLayout />}>
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingListing />} />

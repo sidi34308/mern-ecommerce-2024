@@ -1,10 +1,12 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import logo from "../../assets/logo.svg";
 import {
   Link,
   useLocation,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -139,8 +141,7 @@ function ShoppingHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link to="/shop/home" className="flex items-center gap-2">
-          <HousePlug className="h-6 w-6" />
-          <span className="font-bold">Ecommerce</span>
+          <img src={logo} alt="picky Ecommerce Logo" className="h-18 w-18" />
         </Link>
         <Sheet>
           <SheetTrigger asChild>

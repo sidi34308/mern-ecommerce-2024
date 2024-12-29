@@ -1,9 +1,10 @@
-const paypal = require("paypal-rest-sdk");
+// const paypal = require("paypal-rest-sdk");
 
-paypal.configure({
-  mode: "",
-  client_id: "",
-  client_secret: "",
-});
+// paypal.configure({
+//   mode: "",
+//   client_id: "",
+//   client_secret: "",
+// });
 
-module.exports = paypal;
+// module.exports = paypal;
+module.exports = {};
