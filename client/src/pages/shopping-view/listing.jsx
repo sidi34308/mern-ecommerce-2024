@@ -9,6 +9,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import { useToast } from "@/components/ui/use-toast";
 import { sortOptions } from "@/config";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
@@ -146,27 +147,32 @@ function ShoppingListing() {
   console.log(productList, "productListproductListproductList");
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
+    <div
+      className=" bg-[#F5F5F5] grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6"
+      style={{ direction: "rtl" }}
+    >
       <ProductFilter filters={filters} handleFilter={handleFilter} />
-      <div className="bg-background w-full rounded-lg shadow-sm">
-        <div className="p-4 border-b flex items-center justify-between">
-          <h2 className="text-lg font-extrabold">All Products</h2>
+      <div className=" w-full rounded-lg ">
+        <div className="p-4 flex items-center justify-between">
+          <h2 className="text-lg font-extrabold">جميع المنتجات</h2>
           <div className="flex items-center gap-3">
-            <span className="text-muted-foreground">
-              {productList?.length} Products
-            </span>
+            <span className="text-[#BDA8C2]">{productList?.length} نتائج</span>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild className="">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 bg-white shadow-xl"
                 >
                   <ArrowUpDownIcon className="h-4 w-4" />
-                  <span>Sort by</span>
+                  <span>ترتيب</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuContent
+                align="start"
+                className="w-[200px]"
+                style={{ direction: "rtl" }}
+              >
                 <DropdownMenuRadioGroup value={sort} onValueChange={handleSort}>
                   {sortOptions.map((sortItem) => (
                     <DropdownMenuRadioItem

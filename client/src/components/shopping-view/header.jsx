@@ -1,5 +1,8 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import logo from "../../assets/logo.svg";
+import cart from "../../assets/cart.svg";
+import search from "../../assets/search.svg";
+
 import {
   Link,
   useLocation,
@@ -52,11 +55,14 @@ function MenuItems() {
   }
 
   return (
-    <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
+    <nav
+      className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-1 lg:flex-row"
+      style={{ direction: "rtl" }}
+    >
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
           onClick={() => handleNavigate(menuItem)}
-          className="text-sm font-medium cursor-pointer"
+          className="text-lg font-medium text-primary cursor-pointer hover:bg-opacity-50 hover:bg-[#F0EBF1] py-2 px-2 rounded-sm  "
           key={menuItem.id}
         >
           {menuItem.label}
@@ -84,20 +90,20 @@ function HeaderRightContent() {
   console.log(cartItems, "sangam");
 
   return (
-    <div className="flex lg:items-center lg:flex-row flex-col gap-4">
+    <div className="flex lg:items-center lg:flex-row flex-col gap-5">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button
+        <button
           onClick={() => setOpenCartSheet(true)}
           variant="outline"
           size="icon"
-          className="relative"
+          className="relative ring-0"
         >
-          <ShoppingCart className="w-6 h-6" />
-          <span className="absolute top-[-5px] right-[2px] font-bold text-sm">
+          <img src={cart} className="w-10 h-10" />
+          <span className="absolute top-[0px] right-[-10px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
             {cartItems?.items?.length || 0}
           </span>
           <span className="sr-only">User cart</span>
-        </Button>
+        </button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
@@ -107,8 +113,10 @@ function HeaderRightContent() {
           }
         />
       </Sheet>
-
-      <DropdownMenu>
+      <Link to="/shop/search" className="flex items-center gap-2">
+        <img src={search} className="w-10 h-10" />
+      </Link>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">
             <AvatarFallback className="bg-black text-white font-extrabold">
@@ -129,7 +137,7 @@ function HeaderRightContent() {
             Logout
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </div>
   );
 }
@@ -138,8 +146,9 @@ function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+    <header className="sticky nav-shadow top-0 z-40 w-full border-b bg-background">
+      <div className="bg-primary w-full h-4"></div>
+      <div className="flex h-20 items-center justify-between px-4 md:px-20">
         <Link to="/shop/home" className="flex items-center gap-2">
           <img src={logo} alt="picky Ecommerce Logo" className="h-18 w-18" />
         </Link>

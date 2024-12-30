@@ -109,7 +109,7 @@ export const shoppingViewHeaderMenuItems = [
   },
   {
     id: "products",
-    label: "Products",
+    label: "جميع الأقسام",
     path: "/shop/listing",
   },
   {
@@ -137,11 +137,11 @@ export const shoppingViewHeaderMenuItems = [
     label: "Accessories",
     path: "/shop/listing",
   },
-  {
-    id: "search",
-    label: "Search",
-    path: "/shop/search",
-  },
+  // {
+  //   id: "search",
+  //   label: "Search",
+  //   path: "/shop/search",
+  // },
 ];
 
 export const categoryOptionsMap = {
@@ -180,10 +180,10 @@ export const filterOptions = {
 };
 
 export const sortOptions = [
-  { id: "price-lowtohigh", label: "Price: Low to High" },
-  { id: "price-hightolow", label: "Price: High to Low" },
-  { id: "title-atoz", label: "Title: A to Z" },
-  { id: "title-ztoa", label: "Title: Z to A" },
+  { id: "price-lowtohigh", label: "السعر - من الأقل إلى الأعلى" },
+  { id: "price-hightolow", label: "السعر - من الأعلى إلى الأقل" },
+  { id: "title-atoz", label: "العنوان: من أ إلى ي" },
+  { id: "title-ztoa", label: "العنوان: من ي إلى أ" },
 ];
 
 export const addressFormControls = [

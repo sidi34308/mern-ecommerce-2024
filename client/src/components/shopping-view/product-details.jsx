@@ -107,16 +107,16 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
-        <div className="relative overflow-hidden rounded-lg">
+        <div className="relative overflow-hidden rounded-xl">
           <img
             src={productDetails?.image}
             alt={productDetails?.title}
             width={600}
             height={600}
-            className="aspect-square w-full object-cover"
+            className="aspect-square w-full object-cover rounded-md "
           />
         </div>
-        <div className="">
+        <div className="" style={{ direction: "rtl" }}>
           <div>
             <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
             <p className="text-muted-foreground text-2xl mb-5 mt-4">
@@ -129,22 +129,22 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
-              ${productDetails?.price}
+              ر.ق{productDetails?.price}
             </p>
             {productDetails?.salePrice > 0 ? (
               <p className="text-2xl font-bold text-muted-foreground">
-                ${productDetails?.salePrice}
+                ر.ق{productDetails?.salePrice}
               </p>
             ) : null}
           </div>
-          <div className="flex items-center gap-2 mt-2">
+          {/* <div className="flex items-center gap-2 mt-2">
             <div className="flex items-center gap-0.5">
               <StarRatingComponent rating={averageReview} />
             </div>
             <span className="text-muted-foreground">
               ({averageReview.toFixed(2)})
             </span>
-          </div>
+          </div> */}
           <div className="mt-5 mb-5">
             {productDetails?.totalStock === 0 ? (
               <Button className="w-full opacity-60 cursor-not-allowed">
@@ -166,7 +166,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           </div>
           <Separator />
           <div className="max-h-[300px] overflow-auto">
-            <h2 className="text-xl font-bold mb-4">Reviews</h2>
+            {/* <h2 className="text-xl font-bold mb-4">Reviews</h2>
             <div className="grid gap-6">
               {reviews && reviews.length > 0 ? (
                 reviews.map((reviewItem) => (
@@ -192,8 +192,8 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               ) : (
                 <h1>No Reviews</h1>
               )}
-            </div>
-            <div className="mt-10 flex-col flex gap-2">
+            </div> */}
+            {/* <div className="mt-10 flex-col flex gap-2">
               <Label>Write a review</Label>
               <div className="flex gap-1">
                 <StarRatingComponent
@@ -213,7 +213,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
               >
                 Submit
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </DialogContent>
