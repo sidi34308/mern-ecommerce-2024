@@ -15,7 +15,7 @@ function ShoppingProductTile({
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-xl"
+            className="w-full h-[300px] object-cover rounded-3xl"
           />
           {product?.totalStock === 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
@@ -32,28 +32,30 @@ function ShoppingProductTile({
           ) : null}
         </div>
         <CardContent className="p-4">
-          <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[16px] text-muted-foreground">
-              {categoryOptionsMap[product?.category]}
-            </span>
-            <span className="text-[16px] text-muted-foreground">
-              {brandOptionsMap[product?.brand]}
-            </span>
-          </div>
-          <div className="flex justify-between items-center mb-2">
-            <span
-              className={`${
-                product?.salePrice > 0 ? "line-through" : ""
-              } text-lg font-semibold text-primary`}
-            >
-              ر.ق{product?.price}
-            </span>
+          <div className="flex gap-3 items-center mb-2">
             {product?.salePrice > 0 ? (
-              <span className="text-lg font-semibold text-primary">
-                ر.ق{product?.salePrice}
+              <span className="text-lg font-semibold text-red-600">
+                {product?.salePrice} ر.ق
               </span>
             ) : null}
+            <span
+              className={`${
+                product?.salePrice > 0
+                  ? "line-through text-[#757575]"
+                  : "text-red-600"
+              } text-lg font-semibold `}
+            >
+              {product?.price} ر.ق
+            </span>
+          </div>
+          <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-[16px] text-[#757575]">
+              {categoryOptionsMap[product?.category]}
+            </span>
+            {/* <span className="text-[16px] text-muted-foreground">
+              {brandOptionsMap[product?.brand]}
+            </span> */}
           </div>
         </CardContent>
       </div>
@@ -63,12 +65,12 @@ function ShoppingProductTile({
             Out Of Stock
           </Button>
         ) : (
-          <Button
+          <button
             onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
-            className="w-full"
+            className="w-full bg-primary text-white py-3 rounded-2xl hover:opacity-90"
           >
-            Add to cart
-          </Button>
+            إضافة للسلة
+          </button>
         )}
       </CardFooter>
     </Card>

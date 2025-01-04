@@ -1,34 +1,33 @@
 import { filterOptions } from "@/config";
 import { Fragment } from "react";
 import { Label } from "../ui/label";
-import { Checkbox } from "../ui/checkbox";
 import { Separator } from "../ui/separator";
+import { SquareOption } from "../ui/square-option";
 
 function ProductFilter({ filters, handleFilter }) {
   return (
-    <div className="bg-background rounded-lg">
+    <div className="bg- rounded-lg">
       <div className="p-4 border-b">
-        <h2 className="text-lg font-extrabold">Filters</h2>
+        <h2 className="text-lg font-extrabold">المرشحات</h2>
       </div>
       <div className="p-4 space-y-4">
         {Object.keys(filterOptions).map((keyItem) => (
-          <Fragment>
+          <Fragment key={keyItem}>
             <div>
-              <h3 className="text-base font-bold">{keyItem}</h3>
-              <div className="grid gap-2 mt-2">
+              <h3 className="text-base font-bold pb-4">{keyItem}</h3>
+              <div className="flex flex-wrap gap-2">
                 {filterOptions[keyItem].map((option) => (
-                  <Label className="flex font-medium items-center gap-2 ">
-                    <Checkbox
-                      checked={
-                        filters &&
-                        Object.keys(filters).length > 0 &&
-                        filters[keyItem] &&
-                        filters[keyItem].indexOf(option.id) > -1
-                      }
-                      onCheckedChange={() => handleFilter(keyItem, option.id)}
-                    />
-                    {option.label}
-                  </Label>
+                  <SquareOption
+                    key={option.id}
+                    label={option.label}
+                    selected={
+                      filters &&
+                      Object.keys(filters).length > 0 &&
+                      filters[keyItem] &&
+                      filters[keyItem].indexOf(option.id) > -1
+                    }
+                    onClick={() => handleFilter(keyItem, option.id)}
+                  />
                 ))}
               </div>
             </div>
