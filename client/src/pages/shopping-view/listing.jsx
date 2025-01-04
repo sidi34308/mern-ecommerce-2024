@@ -199,11 +199,11 @@ function ShoppingListing() {
             : null}
         </div>
       </div>
-      <ProductDetailsDialog
+      {/* <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
-      />
+      /> */}
     </div>
   );
 }
