@@ -5,6 +5,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
 import { sendOrderEmail } from "@/lib/emailService";
+import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
+import SuccessMessage from "./SuccessMessage";
 
 function ShoppingCheckout() {
   const dispatch = useDispatch();
@@ -24,6 +26,9 @@ function ShoppingCheckout() {
   const [deliveryFee] = useState(25); // Fixed delivery fee
   const [totalAmount, setTotalAmount] = useState(0);
   console.log(productList);
+
+  const [showSuccess, setShowSuccess] = useState(false);
+
   // Fetch cart items and products
   useEffect(() => {
     dispatch(fetchCartItems());
@@ -36,7 +41,7 @@ function ShoppingCheckout() {
   useEffect(() => {
     if (cartItems.length > 0 && productList.length > 0) {
       const cartDetails = cartItems.map((cartItem) => {
-        const product = productList.find((p) => p.id === cartItem.productId);
+        const product = productList.find((p) => p._id === cartItem.productId);
         return {
           ...cartItem,
           ...product,
@@ -85,11 +90,7 @@ function ShoppingCheckout() {
 
     try {
       await sendOrderEmail(orderData);
-      toast({
-        title: "Order submitted successfully!",
-        description: "We will contact you soon to confirm the order.",
-        variant: "success",
-      });
+      setShowSuccess(true);
     } catch (error) {
       console.error("Error submitting order:", error);
       toast({
@@ -115,22 +116,13 @@ function ShoppingCheckout() {
         <div className="bg-gray-100 p-6 rounded-lg shadow-md">
           <h3 className="text-lg font-bold mb-4">ملخص الطلب</h3>
           <div className="mb-4">
-            {cartItems.map((cartItem) => {
-              const product = productList.find(
-                (product) => product.id === cartItem.productId
-              );
-              return (
-                <div
-                  key={cartItem.productId}
-                  className="flex justify-between mb-2"
-                >
-                  <span>{product?.name}</span>
-                  <span>
-                    {cartItem.quantity} x {product?.price} ريال
-                  </span>
-                </div>
-              );
-            })}
+            <div className="mt-8 space-y-4" style={{ direction: "ltr" }}>
+              {cartItems && cartItems.length > 0
+                ? cartItems.map((item) => (
+                    <UserCartItemsContent cartItem={item} />
+                  ))
+                : null}
+            </div>
           </div>
           <div className="flex justify-between mb-4">
             <span>رسوم التوصيل</span>
@@ -146,65 +138,85 @@ function ShoppingCheckout() {
           >
             إرسال الطلب
           </Button>
+          <SuccessMessage
+            isVisible={showSuccess}
+            onClose={() => setShowSuccess(false)}
+          />
         </div>
 
         {/* Contact Information */}
         <div className="space-y-4">
-          <input
-            type="text"
-            name="fullName"
-            placeholder="الاسم الكامل"
-            value={formData.fullName}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="البريد الإلكتروني"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            name="age"
-            placeholder="العمر"
-            value={formData.age}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="رقم الهاتف"
-            value={formData.phone}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            name="address"
-            placeholder="العنوان"
-            value={formData.address}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            name="region"
-            placeholder="المنطقة"
-            value={formData.region}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <textarea
-            name="notes"
-            placeholder="ملاحظات"
-            value={formData.notes}
-            onChange={handleInputChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
+          <div>
+            <label className="block mb-1 font-bold">
+              الاسم الكامل <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="يرجى إدخال الاسم الكامل"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-bold">البريد الإلكتروني</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="يرجى إدخال البريد الإلكتروني"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-bold">العمر</label>
+            <input
+              type="number"
+              name="age"
+              value={formData.age}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="يرجى إدخال العمر"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-bold">
+              رقم الهاتف <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="يرجى إدخال رقم الهاتف"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-bold">
+              اسم المنطقة <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              name="region"
+              value={formData.region}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="يرجى إدخال اسم المنطقة"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-bold">ملاحظات إضافية</label>
+            <textarea
+              name="notes"
+              value={formData.notes}
+              onChange={handleInputChange}
+              className="w-full border border-gray-300 p-2 rounded-lg"
+              placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
+            />
+          </div>
         </div>
       </div>
     </div>
