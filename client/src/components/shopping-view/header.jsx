@@ -84,7 +84,7 @@ function HeaderRightContent() {
   }
 
   useEffect(() => {
-    dispatch(fetchCartItems(user?.id));
+    dispatch(fetchCartItems());
   }, [dispatch]);
 
   console.log(cartItems, "sangam");
@@ -100,17 +100,23 @@ function HeaderRightContent() {
         >
           <img src={cart} className="w-10 h-10" />
           <span className="absolute top-[0px] right-[-10px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
-            {cartItems?.items?.length || 0}
+            {cartItems?.length || 0}
+            {/* {cartItems && cartItems.length > 0 && (
+              <ul className="absolute top-10 right-0 bg-black shadow-lg rounded-lg w-48">
+                {cartItems.map((item, index) => (
+                  <li key={index} className="p-2 border-b last:border-b-0">
+                    {item.productId} - {item.quantity}
+                  </li>
+                ))}
+              </ul>
+            )} */}
           </span>
+
           <span className="sr-only">User cart</span>
         </button>
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
-          cartItems={
-            cartItems && cartItems.items && cartItems.items.length > 0
-              ? cartItems.items
-              : []
-          }
+          cartItems={cartItems && cartItems.length > 0 ? cartItems : []}
         />
       </Sheet>
       <Link to="/shop/search" className="flex items-center gap-2">

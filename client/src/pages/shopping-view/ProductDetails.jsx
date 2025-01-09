@@ -8,8 +8,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ImageMagnifier from "../../components/shopping-view/ImageMagnifier";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { setProductDetails } from "@/store/shop/products-slice";
+import { useToast } from "@/components/ui/use-toast";
 
 function ProductDetails() {
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { toast } = useToast();
   const { productId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,6 +22,40 @@ function ProductDetails() {
     (state) => state.shopProducts
   );
   const [currentImage, setCurrentImage] = useState(0);
+
+  function handleAddToCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+
+          return;
+        }
+      }
+    }
+    dispatch(
+      addToCart({
+        productId: getCurrentProductId,
+        quantity: 1,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems());
+        toast({
+          title: "Product is added to cart",
+        });
+      }
+    });
+  }
 
   useEffect(() => {
     if (productId) {
@@ -78,7 +117,7 @@ function ProductDetails() {
                       src={image}
                       alt={`${productDetails.title} - Image ${index + 1}`}
                       width="100%"
-                      height="500px"
+                      height="600px"
                       className="object-cover w-full h-[500px] rounded-xl"
                     />
                   </div>
@@ -126,6 +165,9 @@ function ProductDetails() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="w-full bg-primary text-white py-4 rounded-lg font-medium text-lg hover:bg-primary transition duration-300 flex items-center justify-center space-x-2"
+              onClick={() =>
+                handleAddToCart(productDetails?._id, productDetails?.totalStock)
+              }
             >
               <ShoppingCart size={24} />
               <span className="pr-6">إضافة للسلة</span>
