@@ -1,4 +1,13 @@
-import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import {
+  HousePlug,
+  LogOut,
+  Menu,
+  Search,
+  ShoppingBag,
+  ShoppingBasket,
+  ShoppingCart,
+  UserCog,
+} from "lucide-react";
 import logo from "../../assets/logo.svg";
 import cart from "../../assets/cart.svg";
 import search from "../../assets/search.svg";
@@ -34,15 +43,18 @@ function MenuItems() {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [hoveredMenuItem, setHoveredMenuItem] = useState(null);
+  const handleMouseEnter = (id) => setHoveredMenuItem(id);
+  const handleMouseLeave = () => setHoveredMenuItem(null);
+
   function handleNavigate(getCurrentMenuItem) {
     sessionStorage.removeItem("filters");
+
     const currentFilter =
       getCurrentMenuItem.id !== "home" &&
       getCurrentMenuItem.id !== "products" &&
       getCurrentMenuItem.id !== "search"
-        ? {
-            category: [getCurrentMenuItem.id],
-          }
+        ? { category: [getCurrentMenuItem.id] }
         : null;
 
     sessionStorage.setItem("filters", JSON.stringify(currentFilter));
@@ -60,20 +72,41 @@ function MenuItems() {
       style={{ direction: "rtl" }}
     >
       {shoppingViewHeaderMenuItems.map((menuItem) => (
-        <Label
-          onClick={() => handleNavigate(menuItem)}
-          className="text-lg font-medium text-primary cursor-pointer hover:bg-opacity-50 hover:bg-[#F0EBF1] py-2 px-2 rounded-sm  "
+        <div
           key={menuItem.id}
+          onMouseEnter={() => handleMouseEnter(menuItem.id)}
+          onMouseLeave={handleMouseLeave}
+          className="relative"
         >
-          {menuItem.label}
-        </Label>
+          <Label
+            onClick={() => handleNavigate(menuItem)}
+            className="text-lg font-medium text-primary cursor-pointer  hover:bg-[#F0EBF1] py-2 px-2 rounded-sm transition-all duration-600 ease-in-out"
+          >
+            {menuItem.label}
+          </Label>
+
+          {/* Dropdown Menu */}
+          {menuItem.submenu && hoveredMenuItem === menuItem.id && (
+            <div className="absolute top-full right-0 bg-white nav-shadow rounded-sm mt-1 z-10">
+              {menuItem.submenu.map((subItem) => (
+                <div
+                  key={subItem.id}
+                  onClick={() => handleNavigate(subItem)}
+                  className="text-primary text-md pl-16 pr-2 py-2 m-1 rounded-sm hover:bg-accent text-right cursor-pointer transition-all duration-600 ease-in-out"
+                >
+                  {subItem.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       ))}
     </nav>
   );
 }
 
 function HeaderRightContent() {
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
@@ -90,7 +123,7 @@ function HeaderRightContent() {
   console.log(cartItems, "sangam");
 
   return (
-    <div className="flex lg:items-center lg:flex-row flex-col gap-5">
+    <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <button
           onClick={() => setOpenCartSheet(true)}
@@ -98,18 +131,9 @@ function HeaderRightContent() {
           size="icon"
           className="relative ring-0"
         >
-          <img src={cart} className="w-10 h-10" />
+          <ShoppingBasket className="w-10 h-10 p-2 hover:bg-accent rounded-md " />
           <span className="absolute top-[0px] right-[-10px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
             {cartItems?.length || 0}
-            {/* {cartItems && cartItems.length > 0 && (
-              <ul className="absolute top-10 right-0 bg-black shadow-lg rounded-lg w-48">
-                {cartItems.map((item, index) => (
-                  <li key={index} className="p-2 border-b last:border-b-0">
-                    {item.productId} - {item.quantity}
-                  </li>
-                ))}
-              </ul>
-            )} */}
           </span>
 
           <span className="sr-only">User cart</span>
@@ -118,10 +142,14 @@ function HeaderRightContent() {
           setOpenCartSheet={setOpenCartSheet}
           cartItems={cartItems && cartItems.length > 0 ? cartItems : []}
         />
+        <Link to="/shop/search" className="flex items-center gap-2">
+          <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
+        </Link>
       </Sheet>
-      <Link to="/shop/search" className="flex items-center gap-2">
-        <img src={search} className="w-10 h-10" />
-      </Link>
+
+      {/* <Link to="/shop/search" className="flex items-center gap-2">
+        <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
+      </Link> */}
       {/* <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="bg-black">

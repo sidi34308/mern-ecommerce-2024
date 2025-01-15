@@ -127,6 +127,7 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
+import { useState } from "react";
 
 function UserCartItemsContent({ cartItem }) {
   const { productList } = useSelector((state) => state.shopProducts);
@@ -138,11 +139,13 @@ function UserCartItemsContent({ cartItem }) {
     (product) => product._id === cartItem?.productId
   );
 
+  // Show loading state or placeholder if product list is being fetched
+
   // If product not found, show a placeholder or warning
   if (!product) {
     return (
       <div className="flex items-center justify-between space-x-4">
-        <p className="text-red-500">Product not found</p>
+        <p className="text-red-500">المنتج غير موجود</p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}
           className="cursor-pointer mt-1"
@@ -156,7 +159,7 @@ function UserCartItemsContent({ cartItem }) {
     if (typeOfAction === "plus") {
       if (getCartItem?.quantity + 1 > product?.totalStock) {
         toast({
-          title: `Only ${product?.totalStock} items available in stock`,
+          title: `فقط ${product?.totalStock} عناصر متاحة في المخزون`,
           variant: "destructive",
         });
         return;
@@ -173,7 +176,7 @@ function UserCartItemsContent({ cartItem }) {
       })
     ).then(() => {
       toast({
-        title: "Cart item updated successfully",
+        title: "تم تحديث عنصر السلة بنجاح",
       });
     });
   }
@@ -181,7 +184,8 @@ function UserCartItemsContent({ cartItem }) {
   function handleCartItemDelete(getCartItem) {
     dispatch(deleteCartItem({ productId: getCartItem?.productId })).then(() => {
       toast({
-        title: "Cart item deleted successfully",
+        title: "تم حذف عنصر السلة بنجاح",
+        variant: "success",
       });
     });
   }
@@ -189,7 +193,7 @@ function UserCartItemsContent({ cartItem }) {
   return (
     <div className="flex items-center space-x-4">
       <img
-        src={product?.image}
+        src={product?.images[0]}
         alt={product?.title}
         className="w-20 h-20 rounded object-cover"
       />
@@ -204,7 +208,7 @@ function UserCartItemsContent({ cartItem }) {
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
           >
             <Minus className="w-4 h-4" />
-            <span className="sr-only">Decrease</span>
+            <span className="sr-only">تقليل</span>
           </Button>
           <span className="font-semibold">{cartItem?.quantity}</span>
           <Button
@@ -214,22 +218,23 @@ function UserCartItemsContent({ cartItem }) {
             onClick={() => handleUpdateQuantity(cartItem, "plus")}
           >
             <Plus className="w-4 h-4" />
-            <span className="sr-only">Increase</span>
+            <span className="sr-only">زيادة</span>
           </Button>
         </div>
       </div>
       <div className="flex flex-col items-end">
         <p className="font-semibold">
-          $
           {(
             (product?.salePrice > 0 ? product?.salePrice : product?.price) *
             cartItem?.quantity
           ).toFixed(2)}
+          {" ر.ق "}
         </p>
         <Trash
           onClick={() => handleCartItemDelete(cartItem)}
           className="cursor-pointer mt-1"
           size={20}
+          color="red"
         />
       </div>
     </div>

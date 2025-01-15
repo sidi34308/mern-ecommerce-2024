@@ -61,21 +61,18 @@ export const addProductFormElements = [
       { id: "men", label: "Men" },
       { id: "women", label: "Women" },
       { id: "kids", label: "Kids" },
-      { id: "accessories", label: "Accessories" },
-      { id: "footwear", label: "Footwear" },
+      { id: "groups", label: "Groups" },
+      { id: "offers", label: "Offers" },
     ],
   },
   {
-    label: "Brand",
-    name: "brand",
+    label: "Labels",
+    name: "Labels",
     componentType: "select",
     options: [
-      { id: "nike", label: "Nike" },
-      { id: "adidas", label: "Adidas" },
-      { id: "puma", label: "Puma" },
-      { id: "levi", label: "Levi's" },
-      { id: "zara", label: "Zara" },
-      { id: "h&m", label: "H&M" },
+      { id: "weight ", label: "Weight Management" },
+      { id: "skincare", label: "Skincare" },
+      { id: "height", label: " Height Growth" },
     ],
   },
   {
@@ -111,32 +108,53 @@ export const shoppingViewHeaderMenuItems = [
     id: "products",
     label: "جميع الأقسام",
     path: "/shop/listing",
+    submenu: [
+      { id: "men", label: "رجال", path: "/shop/listing" },
+      { id: "women", label: "نساء", path: "/shop/listing" },
+      { id: "kids", label: "أطفال", path: "/shop/listing" },
+    ],
   },
+
   {
-    id: "men",
-    label: "Men",
+    id: "groups",
+    label: "المجموعات",
     path: "/shop/listing",
   },
   {
-    id: "women",
-    label: "Women",
+    id: "offers",
+    label: "العروض",
     path: "/shop/listing",
   },
   {
-    id: "kids",
-    label: "Kids",
-    path: "/shop/listing",
+    id: "about",
+    label: "من نحن",
+    path: "/about",
   },
-  {
-    id: "footwear",
-    label: "Footwear",
-    path: "/shop/listing",
-  },
-  {
-    id: "accessories",
-    label: "Accessories",
-    path: "/shop/listing",
-  },
+  // {
+  //   id: "men",
+  //   label: "Men",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "women",
+  //   label: "Women",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "kids",
+  //   label: "Kids",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "footwear",
+  //   label: "Footwear",
+  //   path: "/shop/listing",
+  // },
+  // {
+  //   id: "accessories",
+  //   label: "Accessories",
+  //   path: "/shop/listing",
+  // },
   // {
   //   id: "search",
   //   label: "Search",
@@ -145,37 +163,31 @@ export const shoppingViewHeaderMenuItems = [
 ];
 
 export const categoryOptionsMap = {
-  men: "Men",
-  women: "Women",
-  kids: "Kids",
-  accessories: "Accessories",
+  men: "رجال",
+  women: "نساء",
+  kids: "أطفال",
+  groups: "المجموعات",
   footwear: "Footwear",
 };
 
-export const brandOptionsMap = {
-  nike: "Nike",
-  adidas: "Adidas",
-  puma: "Puma",
-  levi: "Levi",
-  zara: "Zara",
-  "h&m": "H&M",
+export const lableOptionsMap = {
+  weight: "Weight",
+  skincare: "Skincare",
+  height: "Height",
 };
 
 export const filterOptions = {
   category: [
-    { id: "men", label: "Men" },
-    { id: "women", label: "Women" },
-    { id: "kids", label: "Kids" },
-    { id: "accessories", label: "Accessories" },
-    { id: "footwear", label: "Footwear" },
+    { id: "men", label: "رجال" },
+    { id: "women", label: "نساء" },
+    { id: "kids", label: "أطفال" },
+    { id: "groups", label: "مجموعات" },
+    { id: "offers", label: "عروض" },
   ],
-  brand: [
-    { id: "nike", label: "Nike" },
-    { id: "adidas", label: "Adidas" },
-    { id: "puma", label: "Puma" },
-    { id: "levi", label: "Levi's" },
-    { id: "zara", label: "Zara" },
-    { id: "h&m", label: "H&M" },
+  labels: [
+    { id: "weight ", label: "الاهتمام بالوزن" },
+    { id: "skincare", label: "العناية بالشعر" },
+    { id: "height", label: "زيادة الطول" },
   ],
 };
 

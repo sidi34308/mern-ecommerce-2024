@@ -67,7 +67,7 @@ const ImageMagnifier = ({ src, alt, width, height }) => {
             background: `url(${src})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: `${cursorPosition.x}% ${cursorPosition.y}%`,
-            backgroundSize: "600% 600%",
+            backgroundSize: "700% 700%",
           }}
         />
       )}

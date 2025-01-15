@@ -1,48 +1,57 @@
-const { imageUploadUtil } = require("../../helpers/cloudinary");
 const Product = require("../../models/Product");
+
+const { imageUploadUtil } = require("../../helpers/s3");
 
 const handleImageUpload = async (req, res) => {
   try {
-    const b64 = Buffer.from(req.file.buffer).toString("base64");
-    const url = "data:" + req.file.mimetype + ";base64," + b64;
-    const result = await imageUploadUtil(url);
+    const result = await imageUploadUtil(req.files);
 
     res.json({
       success: true,
-      result,
+      urls: result.map((r) => r.url), // Return an array of URLs
     });
   } catch (error) {
     console.log(error);
     res.json({
       success: false,
-      message: "Error occured",
+      message: "Error occurred",
     });
   }
 };
-
-//add a new product
+// add a new product
 const addProduct = async (req, res) => {
   try {
+    // console.log("Files received:", req.body); // Debugging step
+
     const {
-      image,
+      images,
       title,
       description,
       category,
-      brand,
+      labels,
+      group,
       price,
       salePrice,
       totalStock,
       averageReview,
     } = req.body;
 
-    console.log(averageReview, "averageReview");
+    // // If images are not URLs, upload them
+    // if (
+    //   !Array.isArray(images) ||
+    //   images.some((url) => !url.startsWith("http"))
+    // ) {
+    //   const imageUploadResult = await imageUploadUtil(req.files);
+    //   images = imageUploadResult.map((r) => r.url); // Use the URLs from the image upload
+    // }
 
     const newlyCreatedProduct = new Product({
-      image,
+      images, // Store multiple image URLs
       title,
       description,
       category,
-      brand,
+      labels,
+      group,
       price,
       salePrice,
       totalStock,
@@ -50,15 +59,16 @@ const addProduct = async (req, res) => {
     });
 
     await newlyCreatedProduct.save();
-    res.status(201).json({
+
+    res.json({
       success: true,
-      data: newlyCreatedProduct,
+      product: newlyCreatedProduct,
     });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
+  } catch (error) {
+    console.log(error);
+    res.json({
       success: false,
-      message: "Error occured",
+      message: "Error occurred",
     });
   }
 };
@@ -90,7 +100,8 @@ const editProduct = async (req, res) => {
       title,
       description,
       category,
-      brand,
+      labels,
+      group,
       price,
       salePrice,
       totalStock,
@@ -107,7 +118,7 @@ const editProduct = async (req, res) => {
     findProduct.title = title || findProduct.title;
     findProduct.description = description || findProduct.description;
     findProduct.category = category || findProduct.category;
-    findProduct.brand = brand || findProduct.brand;
+    findProduct.labels = labels || findProduct.labels;
     findProduct.price = price === "" ? 0 : price || findProduct.price;
     findProduct.salePrice =
       salePrice === "" ? 0 : salePrice || findProduct.salePrice;

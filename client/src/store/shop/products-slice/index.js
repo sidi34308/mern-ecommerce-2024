@@ -21,7 +21,7 @@ export const fetchAllFilteredProducts = createAsyncThunk(
       `http://localhost:5000/api/shop/products/get?${query}`
     );
 
-    console.log(result);
+    console.log("all product", result.data);
 
     return result?.data;
   }

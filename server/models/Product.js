@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const ProductSchema = new mongoose.Schema(
   {
-    image: String,
+    images: [String], // Change 'image' to 'images' and make it an array of strings
     title: String,
     description: String,
     category: String,
-    brand: String,
+    labels: String,
+    group: Boolean, //
     price: Number,
     salePrice: Number,
     totalStock: Number,
