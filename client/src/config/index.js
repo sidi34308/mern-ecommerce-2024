@@ -102,12 +102,12 @@ export const shoppingViewHeaderMenuItems = [
   {
     id: "home",
     label: "الرئيسية",
-    path: "/shop/home",
+    path: "/",
   },
   {
     id: "products",
     label: "جميع الأقسام",
-    path: "/shop/listing",
+    path: "/listing",
     submenu: [
       { id: "men", label: "رجال", path: "/shop/listing" },
       { id: "women", label: "نساء", path: "/shop/listing" },

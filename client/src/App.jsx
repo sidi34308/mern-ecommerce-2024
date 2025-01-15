@@ -58,19 +58,20 @@ function App() {
         </Route>
 
         {/* main Routes */}
-        <Route path="/shop" element={<ShoppingLayout />}>
-          <Route path="/shop/product/:productId" element={<ProductDetails />} />
+        <Route path="/" element={<ShoppingLayout />}>
+          <Route path="/product/:productId" element={<ProductDetails />} />
 
-          <Route path="home" element={<ShoppingHome />} />
-          <Route path="listing" element={<ShoppingListing />} />
-          <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="/" element={<ShoppingHome />} />
+          <Route path="/listing" element={<ShoppingListing />} />
           <Route path="account" element={<ShoppingAccount />} />
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
-          <Route path="search" element={<SearchProducts />} />
+          <Route path="/search" element={<SearchProducts />} />
         </Route>
 
+        <Route path="/checkout" element={<ShoppingCheckout />} />
         {/* Other Routes */}
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

@@ -123,7 +123,7 @@ function ShoppingHome() {
   return (
     <div className="flex flex-col min-h-screen" style={{ direction: "rtl" }}>
       <div className="w-full sm:h-[400px] h-[200px] flex items-center justify-center ">
-        <h1 className="sm:text-6xl text-4xl font-bold text-center py-10">
+        <h1 className="sm:text-7xl text-4xl font-bold text-center py-10">
           مكانك المعتمد للمنتجات الصحية! ✨
         </h1>
       </div>

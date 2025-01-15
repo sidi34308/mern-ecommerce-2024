@@ -91,11 +91,11 @@ function SearchProducts() {
     >
       <div className="flex justify-center mb-8">
         <div className="w-full flex items-center">
-          <Input
+          <input
             value={keyword}
             name="keyword"
             onChange={(event) => setKeyword(event.target.value)}
-            className="py-8 pr-10 nav-shadow "
+            className="py-8 pr-10 nav-shadow w-full rounded-md  z-[101]  transition duration-1000 "
             placeholder="ابحث عن منتج..."
           />
         </div>

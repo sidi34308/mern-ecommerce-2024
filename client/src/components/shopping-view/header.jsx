@@ -142,36 +142,10 @@ function HeaderRightContent() {
           setOpenCartSheet={setOpenCartSheet}
           cartItems={cartItems && cartItems.length > 0 ? cartItems : []}
         />
-        <Link to="/shop/search" className="flex items-center gap-2">
+        <Link to="/search" className="flex items-center gap-2">
           <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
         </Link>
       </Sheet>
-
-      {/* <Link to="/shop/search" className="flex items-center gap-2">
-        <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
-      </Link> */}
-      {/* <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black">
-            <AvatarFallback className="bg-black text-white font-extrabold">
-              {user?.userName[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" className="w-56">
-          <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
-            <UserCog className="mr-2 h-4 w-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
     </div>
   );
 }
@@ -180,10 +154,10 @@ function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <header className="sticky nav-shadow top-0 z-40 w-full border-b bg-background">
+    <header className="sticky border-none nav-shadow top-0 z-40 w-full border-b bg-background">
       <div className="bg-primary w-full h-4"></div>
       <div className="flex h-20 items-center justify-between px-4 md:px-20">
-        <Link to="/shop/home" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="picky Ecommerce Logo" className="h-18 w-18" />
         </Link>
         <Sheet>

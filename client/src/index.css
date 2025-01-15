@@ -77,7 +77,7 @@ body {
 /* // <uniquifier>: Use a unique and descriptive class name
 // <weight>: Use a value from 100 to 900 */
 .nav-shadow {
-  box-shadow: 0px 16px 54.9px 0px rgba(0, 0, 0, 0.03);
+  box-shadow: 0px 16px 54.9px 0px rgba(0, 0, 0, 0.055);
 }
 .product-image-slider .slick-prev,
 .product-image-slider .slick-next {

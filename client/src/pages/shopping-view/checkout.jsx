@@ -10,6 +10,8 @@ import SuccessMessage from "./SuccessMessage";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { isValidPhoneNumber } from "libphonenumber-js";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, ShoppingCart, Plus, Minus } from "lucide-react";
 
 function ShoppingCheckout() {
   const dispatch = useDispatch();
@@ -26,6 +28,7 @@ function ShoppingCheckout() {
     notes: "",
   });
   const [phone, setPhone] = useState("");
+  const navigate = useNavigate();
 
   const handlePhoneChange = (value) => {
     setPhone(value);
@@ -127,12 +130,20 @@ function ShoppingCheckout() {
       className="min-w-full flex flex-col gap-6 px-20 py-10"
       style={{ direction: "rtl" }}
     >
-      <h2 className="text-lg font-bold text-center">
+      <div className="flex items-center gap-2 justify-end">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 rounded-md hover:bg-accent transition duration-300 z-10"
+        >
+          <ArrowLeft className="w-6 h-6 text-primary" />
+        </button>
+      </div>
+
+      <h2 className="text-2xl  font-bold mb-5 text-black">
         املأ البيانات أدناه وسنقوم بالتواصل معك في أقرب وقت لتأكيد الطلب وتوصيله
         إلى بابك.
       </h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {/* Contact Information */}
         <div className="space-y-4">
           <div>
@@ -144,7 +155,7 @@ function ShoppingCheckout() {
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full   p-2 rounded-lg"
               placeholder="يرجى إدخال الاسم الكامل"
             />
           </div>
@@ -155,7 +166,7 @@ function ShoppingCheckout() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full   p-2 rounded-lg"
               placeholder="يرجى إدخال البريد الإلكتروني"
             />
           </div>
@@ -166,7 +177,7 @@ function ShoppingCheckout() {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full   p-2 rounded-lg"
               placeholder="يرجى إدخال العمر"
             />
           </div>
@@ -180,8 +191,8 @@ function ShoppingCheckout() {
               onChange={handlePhoneChange}
               placeholder="يرجى إدخال رقم الهاتف"
               containerStyle={{
-                border: "1px solid #d1d5db",
-                borderRadius: "8px",
+                border: "",
+                borderRadius: "1rem",
                 fontFamily: "Alexander",
                 backgroundColor: "",
                 padding: "4px",
@@ -189,6 +200,8 @@ function ShoppingCheckout() {
               }}
               inputStyle={{
                 border: "none",
+                borderRadius: "0.8rem",
+
                 outline: "none",
                 fontSize: "16px",
                 paddingLeft: "",
@@ -200,7 +213,7 @@ function ShoppingCheckout() {
                 marginRight: "8px",
               }}
               dropdownStyle={{
-                maxHeight: "200px",
+                maxHeight: "none",
                 overflowY: "auto",
                 border: "1px solid #d1d5db",
                 borderRadius: "8px",
@@ -217,7 +230,7 @@ function ShoppingCheckout() {
               name="region"
               value={formData.region}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full  p-2 rounded-lg"
               placeholder="يرجى إدخال اسم المنطقة"
             />
           </div>
@@ -227,7 +240,7 @@ function ShoppingCheckout() {
               name="notes"
               value={formData.notes}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 p-2 rounded-lg"
+              className="w-full  p-2 rounded-lg"
               placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
             />
           </div>
@@ -244,20 +257,29 @@ function ShoppingCheckout() {
                 : null}
             </div>
           </div>
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between mb-4 mt-10 ">
             <span>رسوم التوصيل</span>
             <span>{deliveryFee} ريال</span>
           </div>
-          <div className="flex justify-between font-bold">
+          <div className="flex justify-between font-bold text-black">
             <span>المجموع</span>
             <span>{totalAmount} ريال</span>
           </div>
-          <Button
-            onClick={handleSubmitOrder}
-            className="mt-6 w-full bg-pink-500 text-white hover:bg-pink-600"
-          >
-            إرسال الطلب
-          </Button>
+          <div className="flex justify-between gap-4">
+            <a
+              href="/"
+              className="mt-6 flex-2 bg-white text-primary hover:bg-accent rounded-md py-2 px-3"
+            >
+              تسوق المزيد
+            </a>
+            <Button
+              onClick={handleSubmitOrder}
+              className="mt-6 flex-1 bg-pink-500 text-white hover:bg-pink-600"
+            >
+              إرسال الطلب
+            </Button>
+          </div>
+
           <SuccessMessage
             isVisible={showSuccess}
             onClose={() => setShowSuccess(false)}
