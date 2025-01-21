@@ -35,9 +35,9 @@ function ProductDetails() {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
         if (getQuantity + quantity > getTotalStock) {
           toast({
-            title: `Only ${
+            title: `فقط ${
               getTotalStock - getQuantity
-            } quantity can be added for this item`,
+            } كمية يمكن إضافتها لهذا المنتج`,
             variant: "destructive",
           });
 
@@ -54,7 +54,7 @@ function ProductDetails() {
       if (data?.payload?.success) {
         dispatch(fetchCartItems());
         toast({
-          title: "Product is added to cart",
+          title: "تمت إضافة المنتج إلى السلة",
         });
       }
     });
@@ -123,7 +123,7 @@ function ProductDetails() {
       setQuantity((prev) => prev - 1);
     } else if (type === "increment" && quantity >= productDetails.totalStock) {
       toast({
-        title: `Only ${productDetails.totalStock} items in stock`,
+        title: `فقط ${productDetails.totalStock} عناصر في المخزون`,
         variant: "destructive",
       });
     }

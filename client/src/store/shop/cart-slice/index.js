@@ -1,119 +1,5 @@
-// import axios from "axios";
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// client/src/store/shop/cart-slice/index.js
 
-// const initialState = {
-//   cartItems: [],
-//   isLoading: false,
-// };
-
-// export const addToCart = createAsyncThunk(
-//   "cart/addToCart",
-//   async ({ userId, productId, quantity }) => {
-//     const response = await axios.post(
-//       "http://localhost:5000/api/shop/cart/add",
-//       {
-//         userId,
-//         productId,
-//         quantity,
-//       }
-//     );
-
-//     return response.data;
-//   }
-// );
-
-// export const fetchCartItems = createAsyncThunk(
-//   "cart/fetchCartItems",
-//   async (userId) => {
-//     const response = await axios.get(
-//       `http://localhost:5000/api/shop/cart/get/${userId}`
-//     );
-
-//     return response.data;
-//   }
-// );
-
-// export const deleteCartItem = createAsyncThunk(
-//   "cart/deleteCartItem",
-//   async ({ userId, productId }) => {
-//     const response = await axios.delete(
-//       `http://localhost:5000/api/shop/cart/${userId}/${productId}`
-//     );
-
-//     return response.data;
-//   }
-// );
-
-// export const updateCartQuantity = createAsyncThunk(
-//   "cart/updateCartQuantity",
-//   async ({ userId, productId, quantity }) => {
-//     const response = await axios.put(
-//       "http://localhost:5000/api/shop/cart/update-cart",
-//       {
-//         userId,
-//         productId,
-//         quantity,
-//       }
-//     );
-
-//     return response.data;
-//   }
-// );
-
-// const shoppingCartSlice = createSlice({
-//   name: "shoppingCart",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(addToCart.pending, (state) => {
-//         state.isLoading = true;
-//       })
-//       .addCase(addToCart.fulfilled, (state, action) => {
-//         state.isLoading = false;
-//         state.cartItems = action.payload.data;
-//       })
-//       .addCase(addToCart.rejected, (state) => {
-//         state.isLoading = false;
-//         state.cartItems = [];
-//       })
-//       .addCase(fetchCartItems.pending, (state) => {
-//         state.isLoading = true;
-//       })
-//       .addCase(fetchCartItems.fulfilled, (state, action) => {
-//         state.isLoading = false;
-//         state.cartItems = action.payload.data;
-//       })
-//       .addCase(fetchCartItems.rejected, (state) => {
-//         state.isLoading = false;
-//         state.cartItems = [];
-//       })
-//       .addCase(updateCartQuantity.pending, (state) => {
-//         state.isLoading = true;
-//       })
-//       .addCase(updateCartQuantity.fulfilled, (state, action) => {
-//         state.isLoading = false;
-//         state.cartItems = action.payload.data;
-//       })
-//       .addCase(updateCartQuantity.rejected, (state) => {
-//         state.isLoading = false;
-//         state.cartItems = [];
-//       })
-//       .addCase(deleteCartItem.pending, (state) => {
-//         state.isLoading = true;
-//       })
-//       .addCase(deleteCartItem.fulfilled, (state, action) => {
-//         state.isLoading = false;
-//         state.cartItems = action.payload.data;
-//       })
-//       .addCase(deleteCartItem.rejected, (state) => {
-//         state.isLoading = false;
-//         state.cartItems = [];
-//       });
-//   },
-// });
-
-// export default shoppingCartSlice.reducer;
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -130,11 +16,7 @@ const updateLocalStorage = (cartItems) => {
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ productId, quantity }) => {
-    console.log("HERDCFVE");
-
     let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    console.log("HERDCFVE", cartItems);
-
     const existingItemIndex = cartItems.findIndex(
       (item) => item.productId === productId
     );
@@ -143,7 +25,6 @@ export const addToCart = createAsyncThunk(
       cartItems[existingItemIndex].quantity += quantity;
     } else {
       cartItems.push({ productId, quantity });
-      console.log("ADDED");
     }
 
     updateLocalStorage(cartItems);
@@ -156,7 +37,6 @@ export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
   async () => {
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
     return cartItems;
   }
 );
@@ -190,6 +70,12 @@ export const updateCartQuantity = createAsyncThunk(
     return cartItems;
   }
 );
+
+// Clear cart
+export const clearCart = createAsyncThunk("cart/clearCart", async () => {
+  localStorage.removeItem("cartItems");
+  return [];
+});
 
 const shoppingCartSlice = createSlice({
   name: "shoppingCart",
@@ -236,6 +122,9 @@ const shoppingCartSlice = createSlice({
       })
       .addCase(deleteCartItem.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(clearCart.fulfilled, (state) => {
+        state.cartItems = [];
       });
   },
 });

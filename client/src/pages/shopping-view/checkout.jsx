@@ -2,22 +2,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { fetchCartItems } from "@/store/shop/cart-slice";
+import { fetchCartItems, clearCart } from "@/store/shop/cart-slice";
 import { fetchAllFilteredProducts } from "@/store/shop/products-slice";
 import { sendOrderEmail } from "@/lib/emailService";
 import UserCartItemsContent from "@/components/shopping-view/cart-items-content";
 import SuccessMessage from "./SuccessMessage";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
-import { isValidPhoneNumber } from "libphonenumber-js";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, ShoppingCart, Plus, Minus } from "lucide-react";
+import { createNewOrder } from "@/store/shop/order-slice";
+import usePhoneValidation from "@/hooks/usePhoneValidation"; // Import the hook
 
 function ShoppingCheckout() {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const { cartItems } = useSelector((state) => state.shopCart);
-  const { productList } = useSelector((state) => state.shopProducts); // Updated state selector
+  const { productList } = useSelector((state) => state.shopProducts);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -29,17 +30,14 @@ function ShoppingCheckout() {
   });
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
+  const phoneValidation = usePhoneValidation(phone); // Use the hook
 
   const handlePhoneChange = (value) => {
     setPhone(value);
-    if (!isValidPhoneNumber(value)) {
-      console.error("Invalid phone number");
-    }
   };
+
   const [deliveryFee] = useState(25); // Fixed delivery fee
   const [totalAmount, setTotalAmount] = useState(0);
-  console.log(productList);
-
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -77,35 +75,48 @@ function ShoppingCheckout() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const countryCodeLength = 4;
   // Submit order
   const handleSubmitOrder = async () => {
-    if (!formData.fullName || !formData.phone || !formData.region) {
+    if (
+      !formData.fullName ||
+      !phone ||
+      !formData.region ||
+      phone.length <= countryCodeLength
+    ) {
       toast({
-        title: "Please fill in all required fields.",
+        title: "يرجى ملء جميع الحقول المطلوبة.",
         variant: "destructive",
       });
       return;
     }
-    setIsSubmitting(true);
-    try {
-      await sendOrderEmail(orderData);
-      setShowSuccess(true);
-    } catch (error) {
-      console.error("Error submitting order:", error);
-    } finally {
-      setIsSubmitting(false);
+    // Validate phone number
+    if (!phoneValidation.isValid) {
+      toast({
+        title: "رقم الهاتف غير صالح.",
+        description: phoneValidation.errorMessage,
+        variant: "destructive",
+      });
+      return;
     }
+
+    setIsSubmitting(true);
 
     const orderData = {
       ...formData,
+      phone,
       cartItems: cartItems.map((cartItem) => {
         const product = productList.find((p) => p._id === cartItem.productId);
         return {
+          productId: cartItem.productId,
+          image: cartItem.image,
           title: product.title,
           quantity: cartItem.quantity,
           name: product.name,
-          price: product.price,
+          price:
+            product.salePrice && product.salePrice > 1
+              ? product.salePrice
+              : product.price,
         };
       }),
       totalAmount,
@@ -114,14 +125,19 @@ function ShoppingCheckout() {
 
     try {
       await sendOrderEmail(orderData);
+      await dispatch(createNewOrder(orderData)).unwrap();
+      dispatch(clearCart()); // Clear the cart
       setShowSuccess(true);
+      navigate("/Success"); // Navigate to success page
     } catch (error) {
       console.error("Error submitting order:", error);
       toast({
-        title: "Error submitting order.",
-        description: "Please try again later.",
+        title: "خطأ في إرسال الطلب.",
+        description: "يرجى المحاولة مرة أخرى لاحقًا.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -138,13 +154,11 @@ function ShoppingCheckout() {
           <ArrowLeft className="w-6 h-6 text-primary" />
         </button>
       </div>
-
-      <h2 className="text-2xl  font-bold mb-5 text-black">
+      <h2 className="text-2xl font-bold mb-5 text-black">
         املأ البيانات أدناه وسنقوم بالتواصل معك في أقرب وقت لتأكيد الطلب وتوصيله
         إلى بابك.
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-        {/* Contact Information */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div>
             <label className="block mb-2 font-bold">
@@ -155,7 +169,7 @@ function ShoppingCheckout() {
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="w-full   p-2 rounded-lg"
+              className="w-full p-2 rounded-sm"
               placeholder="يرجى إدخال الاسم الكامل"
             />
           </div>
@@ -166,7 +180,7 @@ function ShoppingCheckout() {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full   p-2 rounded-lg"
+              className="w-full p-2 rounded-sm"
               placeholder="يرجى إدخال البريد الإلكتروني"
             />
           </div>
@@ -177,7 +191,7 @@ function ShoppingCheckout() {
               name="age"
               value={formData.age}
               onChange={handleInputChange}
-              className="w-full   p-2 rounded-lg"
+              className="w-full p-2 rounded-sm"
               placeholder="يرجى إدخال العمر"
             />
           </div>
@@ -185,40 +199,43 @@ function ShoppingCheckout() {
             <label className="block mb-2 font-bold">
               رقم الهاتف <span className="text-red-600">*</span>
             </label>
-            <PhoneInput
-              country={"qa"}
-              value={formData.phone}
-              onChange={handlePhoneChange}
-              placeholder="يرجى إدخال رقم الهاتف"
-              containerStyle={{
-                border: "",
-                borderRadius: "1rem",
-                fontFamily: "Alexander",
-                backgroundColor: "",
-                padding: "4px",
-                direction: "ltr",
-              }}
-              inputStyle={{
-                border: "none",
-                borderRadius: "0.8rem",
-
-                outline: "none",
-                fontSize: "16px",
-                paddingLeft: "",
-                width: "100%",
-              }}
-              buttonStyle={{
-                border: "none",
-                borderRight: "1px solid #d1d5db",
-                marginRight: "8px",
-              }}
-              dropdownStyle={{
-                maxHeight: "none",
-                overflowY: "auto",
-                border: "1px solid #d1d5db",
-                borderRadius: "8px",
-                backgroundColor: "#ffffff",
-              }}
+            <div className="" style={{ direction: "ltr" }}>
+              <PhoneInput
+                defaultCountry="qa"
+                value={phone}
+                onChange={handlePhoneChange}
+                className="custom-phone-input"
+                buttonClassName="custom-phone-input-button"
+                inputStyle={{
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "1rem",
+                  fontSize: "16px",
+                  width: "100%",
+                }}
+                buttonStyle={{
+                  border: "none",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px 0 0 8px",
+                  padding: "10px",
+                }}
+              />
+              {!phoneValidation.isValid && (
+                <p className="text-red-600 mt-2">
+                  {phoneValidation.errorMessage}
+                </p>
+              )}
+            </div>
+          </div>
+          <div>
+            <label className="block mb-2 font-bold">العنوان</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              className="w-full p-2 rounded-sm"
+              placeholder="يرجى إدخال العنوان"
             />
           </div>
           <div>
@@ -230,7 +247,7 @@ function ShoppingCheckout() {
               name="region"
               value={formData.region}
               onChange={handleInputChange}
-              className="w-full  p-2 rounded-lg"
+              className="w-full p-2 rounded-sm"
               placeholder="يرجى إدخال اسم المنطقة"
             />
           </div>
@@ -240,24 +257,29 @@ function ShoppingCheckout() {
               name="notes"
               value={formData.notes}
               onChange={handleInputChange}
-              className="w-full  p-2 rounded-lg"
+              className="w-full p-2 rounded-sm"
               placeholder="إذا كانت لديكم أي تعليمات خاصة، يرجى كتابتها هنا."
             />
           </div>
         </div>
-        {/* Order Summary */}
-        <div className="bg-gray-100 p-6 rounded-lg ">
+        <div className="space-y-4">
           <h3 className="text-lg font-bold mb-4">ملخص الطلب</h3>
           <div className="mb-4">
-            <div className="mt-8 space-y-4" style={{ direction: "ltr" }}>
-              {cartItems && cartItems.length > 0
-                ? cartItems.map((item) => (
-                    <UserCartItemsContent cartItem={item} />
-                  ))
-                : null}
-            </div>
+            {cartItems && cartItems.length > 0 ? (
+              <div className="space-y-4" style={{ direction: "ltr" }}>
+                {cartItems.map((item) => (
+                  <UserCartItemsContent
+                    key={item.productId}
+                    cartItem={item}
+                    allProducts={productList}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600">عربة التسوق فارغة.</p>
+            )}
           </div>
-          <div className="flex justify-between mb-4 mt-10 ">
+          <div className="flex justify-between mb-4 mt-10">
             <span>رسوم التوصيل</span>
             <span>{deliveryFee} ريال</span>
           </div>
@@ -275,8 +297,9 @@ function ShoppingCheckout() {
             <Button
               onClick={handleSubmitOrder}
               className="mt-6 flex-1 bg-pink-500 text-white hover:bg-pink-600"
+              disabled={isSubmitting || cartItems.length === 0}
             >
-              إرسال الطلب
+              {isSubmitting ? "جاري الإرسال..." : "إرسال الطلب"}
             </Button>
           </div>
 

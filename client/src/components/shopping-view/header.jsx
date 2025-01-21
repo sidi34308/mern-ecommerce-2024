@@ -123,7 +123,7 @@ function HeaderRightContent() {
   console.log(cartItems, "sangam");
 
   return (
-    <div className="flex lg:items-center lg:flex-row flex-col gap-4">
+    <div className="flex lg:items-center lg:flex-row flex-col gap-1">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
         <button
           onClick={() => setOpenCartSheet(true)}
@@ -132,7 +132,7 @@ function HeaderRightContent() {
           className="relative ring-0"
         >
           <ShoppingBasket className="w-10 h-10 p-2 hover:bg-accent rounded-md " />
-          <span className="absolute top-[0px] right-[-10px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
+          <span className="absolute top-[0px] right-[-8px] font-bold text-sm bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center">
             {cartItems?.length || 0}
           </span>
 
@@ -151,16 +151,21 @@ function HeaderRightContent() {
 }
 
 function ShoppingHeader() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  // const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <header className="sticky border-none nav-shadow top-0 z-40 w-full border-b bg-background">
-      <div className="bg-primary w-full h-4"></div>
+    <header className="sticky border-none  top-0 z-40 w-full border-b bg-background">
+      {/* <div className="bg-primary w-full h-4"></div> */}
       <div className="flex h-20 items-center justify-between px-4 md:px-20">
         <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="picky Ecommerce Logo" className="h-18 w-18" />
         </Link>
+
         <Sheet>
+          <Link to="/search" className="block lg:hidden  items-center gap-2">
+            <Search className="w-10 h-10 p-2 hover:bg-accent rounded-md" />
+          </Link>
+
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="lg:hidden">
               <Menu className="h-6 w-6" />
@@ -169,7 +174,6 @@ function ShoppingHeader() {
           </SheetTrigger>
           <SheetContent side="left" className="w-full max-w-xs">
             <MenuItems />
-            <HeaderRightContent />
           </SheetContent>
         </Sheet>
         <div className="hidden lg:block">

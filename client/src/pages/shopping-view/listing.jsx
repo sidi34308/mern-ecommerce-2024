@@ -17,10 +17,11 @@ import {
   fetchAllFilteredProducts,
   fetchProductDetails,
 } from "@/store/shop/products-slice";
-import { ArrowUpDownIcon } from "lucide-react";
+import { ArrowUpDownIcon, Import } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import WhatsAppPopup_ar from "@/components/shopping-view/WhatsAppPopup_ar";
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
@@ -91,7 +92,7 @@ function ShoppingListing() {
       const getQuantity = getCartItems[indexOfCurrentItem].quantity;
       if (getQuantity + 1 > getTotalStock) {
         toast({
-          title: `Only ${getTotalStock} items available in stock`,
+          title: `فقط ${getTotalStock} عناصر متاحة في المخزون`,
           variant: "destructive",
         });
         return;
@@ -106,7 +107,7 @@ function ShoppingListing() {
     );
 
     toast({
-      title: "Product added to cart",
+      title: "تمت إضافة المنتج إلى السلة",
     });
   }
 
@@ -138,6 +139,7 @@ function ShoppingListing() {
       className=" bg-[#f3f3f3] min-h-screen grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6"
       style={{ direction: "rtl" }}
     >
+      <WhatsAppPopup_ar />
       <ProductFilter filters={filters} handleFilter={handleFilter} />
       <div className=" w-full rounded-lg ">
         <div className="p-4 flex items-center justify-between">

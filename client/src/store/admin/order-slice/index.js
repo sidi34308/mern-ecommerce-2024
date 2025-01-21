@@ -6,6 +6,23 @@ const initialState = {
   orderDetails: null,
 };
 
+export const updateProductQuantities = createAsyncThunk(
+  "order/updateProductQuantities",
+  async (cartItems, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/admin/orders/update-quantities",
+        {
+          cartItems,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const getAllOrdersForAdmin = createAsyncThunk(
   "/order/getAllOrdersForAdmin",
   async () => {
@@ -43,8 +60,13 @@ export const updateOrderStatus = createAsyncThunk(
 );
 
 const adminOrderSlice = createSlice({
-  name: "adminOrderSlice",
-  initialState,
+  name: "order",
+  initialState: {
+    orders: [],
+    orderDetails: null,
+    status: "idle",
+    error: null,
+  },
   reducers: {
     resetOrderDetails: (state) => {
       console.log("resetOrderDetails");
@@ -75,6 +97,17 @@ const adminOrderSlice = createSlice({
       .addCase(getOrderDetailsForAdmin.rejected, (state) => {
         state.isLoading = false;
         state.orderDetails = null;
+      })
+      .addCase(updateProductQuantities.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProductQuantities.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // handle the response data if needed
+      })
+      .addCase(updateProductQuantities.rejected, (state) => {
+        state.isLoading = false;
+        // handle the error if needed
       });
   },
 });

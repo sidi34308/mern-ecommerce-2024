@@ -74,8 +74,8 @@ function AdminSideBar({ open, setOpen }) {
           onClick={() => navigate("/admin/dashboard")}
           className="flex cursor-pointer items-center gap-2"
         >
-          <ChartNoAxesCombined size={30} />
-          <h1 className="text-2xl font-extrabold">Admin Panel</h1>
+          <ChartNoAxesCombined size={80} />
+          <h1 className="text-xl font-bold">Picky Store Admin Panel</h1>
         </div>
         <MenuItems />
       </aside>

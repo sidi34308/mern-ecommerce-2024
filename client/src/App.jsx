@@ -23,7 +23,7 @@ import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import ProductDetails from "./pages/shopping-view/ProductDetails";
-
+import SuccessPage from "./pages/shopping-view/SuccessPage";
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
@@ -34,7 +34,13 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="w-[800] bg-black h-[600px]" />;
+  if (isLoading)
+    return (
+      <div className="w-full flex justify-center items-center h-full">
+        {" "}
+        <img src="/Loading.svg" />
+      </div>
+    );
 
   console.log(isLoading, user, "ssssssssss");
 
@@ -68,6 +74,7 @@ function App() {
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="/search" element={<SearchProducts />} />
         </Route>
+        <Route path="/Success" element={<SuccessPage />} />
 
         <Route path="/checkout" element={<ShoppingCheckout />} />
         {/* Other Routes */}

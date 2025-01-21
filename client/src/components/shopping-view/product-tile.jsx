@@ -21,18 +21,18 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
           />
           {product?.totalStock === 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              Out Of Stock
+              غير متوفر
             </Badge>
           ) : product?.totalStock < 10 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              {`Only ${product?.totalStock} items left`}
+              {`تبقى ${product?.totalStock} قطع فقط`}
             </Badge>
           ) : product?.salePrice > 0 ? (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
               {`${calculateDiscountPercentage(
                 product?.price,
                 product?.salePrice
-              )}% Off`}
+              )}% خصم`}
             </Badge>
           ) : null}
         </div>
@@ -60,7 +60,7 @@ function ShoppingProductTile({ product, handleAddtoCart }) {
       <CardFooter>
         {product?.totalStock === 0 ? (
           <Button className="w-full opacity-60 cursor-not-allowed">
-            Out Of Stock
+            غير متوفر
           </Button>
         ) : (
           <button

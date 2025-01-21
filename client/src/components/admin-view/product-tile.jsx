@@ -1,5 +1,6 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import { Edit2, Trash2 } from "lucide-react";
 
 function AdminProductTile({
   product,
@@ -9,7 +10,7 @@ function AdminProductTile({
   handleDelete,
 }) {
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className="w-full max-w-sm mx-auto  ">
       <div>
         <div className="relative">
           <img
@@ -29,21 +30,38 @@ function AdminProductTile({
               ${product?.price}
             </span>
             {product?.salePrice > 0 ? (
-              <span className="text-lg font-bold">${product?.salePrice}</span>
+              <span className="text-lg font-bold text-green-600">
+                ${product?.salePrice}
+              </span>
             ) : null}
           </div>
+          <div className="text-sm text-gray-600">
+            Quantity: {product?.totalStock}
+          </div>
         </CardContent>
-        <CardFooter className="flex justify-between items-center">
+        <CardFooter className="flex justify-between items-center px-4 py-3">
           <Button
+            variant="outline"
+            size="sm"
             onClick={() => {
               setOpenCreateProductsDialog(true);
               setCurrentEditedId(product?._id);
               setFormData(product);
             }}
+            className="flex items-center space-x-2"
           >
-            Edit
+            <Edit2 size={16} />
+            <span>Edit</span>
           </Button>
-          <Button onClick={() => handleDelete(product?._id)}>Delete</Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDelete(product?._id)}
+            className="flex items-center space-x-2"
+          >
+            <Trash2 size={16} />
+            <span>Delete</span>
+          </Button>
         </CardFooter>
       </div>
     </Card>
